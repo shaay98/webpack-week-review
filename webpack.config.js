@@ -1,33 +1,23 @@
-'use strict';
+"use strict";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const htmlWebpack = new HtmlWebpackPlugin({ template: "./index.html" });
 
 export default {
-entry: "./src/index.js",
-output: {
-path: path.resolve(__dirname, "dist"),
-filename: "bundle.js", clean:"true"
-},
-module: {
-rules: [
-{
-test: /.m?js$/,
-test: /\.css$/, 
-exclude: /node_modules/,
-use: {
-loader: "babel-loader",    
-loader: "style-loader",
-loader: "css-loader",
-options: {
-presets: ["@babel/preset-env"]
-}
-}
-}
-]
-},
-mode: "development"
-}
+  plugins: [htmlWebpack],
+  entry: "./src/index.js",
+  output: { filename: "bundle.js", path: resolve(__dirname, "dist") },
+  module: {
+    rules: [
+      { test: /.css$/, use: ["style-loader", "css-loader"] },
+      {
+        test: /.(?:js|mjs|cdj)$/,
+        loader: "babel-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
+};
